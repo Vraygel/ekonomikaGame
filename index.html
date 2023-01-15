@@ -13,25 +13,27 @@
 
 	<div class="wrap red">
 		<div class="info">
-			здесь будет инфомация об экономике
-			<p class="score"></p>
+			<h1>Сумма на счету</h1>
+			<p class="score">0</p>
+			<h1>Доход в минуту</h1>
+			<p class="profit" profit="0">0</p>
 		</div>
 		<div class="wrap__enterprises__all">
 			<div class="wrap__enterprises blue">
 				<div class="enterprises_item">
 					фото предприятия
 				</div>
-				<div class="enterprises_item red">
+				<div class="enterprises_item red" id="0" name="Приусадебное хозяйство" level="1" income="10" bet="10" price="0" >
 					<h1>Название компании</h1>
-					<h2 name="name_enterprises" >Приусадебное хозяйство</h2>
+					<h2 >Приусадебное хозяйство</h2>
 					<h1>Уровень компании</h1>
-					<h2 name="level_enterprises" >1</h2>
+					<h2 class="level" >1</h2>
 					<h1>Доход компании</h1>
-					<h2 name="income_enterprises" >10</h2> 
-				<!-- </div>
-				<div class="enterprises_item"> -->
-					<button class="buy active">Купить</button>
+					<h2 class="income" >10</h2> 
+
+					<button class="buy active">Купить</button> 
 					<button class="work">Заработать</button>
+					<button class="upgrade">Улучшить</button>
 
 				</div>
 
@@ -41,16 +43,45 @@
 				<div class="enterprises_item">
 					фото предприятия
 				</div>
-				<div class="enterprises_item">
-					инфо о предпиятии
-				</div>
-				<div class="enterprises_item">
-					<button class="buy active">Купить</button>
+
+				<div class="enterprises_item red" id="1" name="Шахта" level="1" income="25" bet="25" price="10000" >
+					<h1>Название компании</h1>
+					<h2 >Шахта</h2>
+					<h1>Уровень компании</h1>
+					<h2 class="level" >1</h2>
+					<h1>Доход компании</h1>
+					<h2 class="income" >25</h2> 
+				
+					<button class="buy active">Купить</button> 
 					<button class="work">Заработать</button>
+					<button class="upgrade">Улучшить</button>
 
 				</div>
 
 			</div>
+
+			<div class="wrap__enterprises blue">
+				<div class="enterprises_item">
+					фото предприятия
+				</div>
+
+				<div class="enterprises_item red" id="2" name="Золотая Шахта" level="1" income="45" bet="45" price="100000" >
+					<h1>Название компании</h1>
+					<h2 >Золотая Шахта</h2>
+					<h1>Уровень компании</h1>
+					<h2 class="level" >1</h2>
+					<h1>Доход компании</h1>
+					<h2 class="income" >45</h2> 
+				
+					<button class="buy active">Купить</button> 
+					<button class="work">Заработать</button>
+					<button class="upgrade">Улучшить</button>
+
+				</div>
+
+			</div>
+
+			
 		</div>
 	</div>
 
