@@ -1,0 +1,30 @@
+* {
+	box-sizing: border-box;
+}
+
+.red {
+	border: 1px solid red;
+}
+
+.blue {
+	border: 1px solid blue;
+}
+
+
+
+.wrap, .wrap__enterprises{
+  display: flex;
+}
+
+.enterprises_item{
+  height: 50px;
+  margin-left: 50px;
+}
+
+.work, .buy{
+  display: none;
+}
+
+.active{
+  display: block;
+}
