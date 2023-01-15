@@ -20,11 +20,19 @@ for (const item of work) {
 }
 
 
+// elem.getAttribute(name)
+
 for (const item of buy) {
 	item.addEventListener('click', (event) => {
 		event.target.classList.remove('active')
+		event.target.nextSibling.nextSibling.classList.add('active')
+holding.push(obj)
 
-		
+
+
+console.log(event.target.parentElement.querySelectorAll('h2'));
+console.log(event.target);
+console.log(event.target.nextSibling.nextSibling.classList);
 		autoWork()
 	})
 	
