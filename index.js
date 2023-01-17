@@ -24,9 +24,16 @@ for (const item of work) {
 
 
 for (const item of buy) {
-	item.addEventListener('click', (event) => {
-		let parent = event.target.parentElement // получаем родителя
 
+
+	let parent = item.parentElement // получаем родителя
+
+	let price = parent.getAttribute('price') // получаем стоимость компании
+
+	item.textContent = `Купить за: ${price}` //  записываем стоимость покупки
+
+	item.addEventListener('click', (event) => {
+		
 		bayCompany(parent, event)
 		
 	})
@@ -42,8 +49,14 @@ function autoWork(calc) {
 function bayCompany(parent, event) {
 	let totalScore = Number(score.textContent) // получаем количество денег на счете
 	let price = parent.getAttribute('price') // получаем стоимость компании
+	let levelAtr = Number(parent.getAttribute('level')) // получаем уровень компании
 
-	if (price <= totalScore) {
+	let upgradePrice = upgradePriceFunc(levelAtr, price) // получаум стоимость улучшения компании
+
+	parent.querySelector('.upgrade').textContent = `Улучшить за: ${upgradePrice}` // получаем кнопку upgrade  и записываем в нее стоимость улучшения
+	
+
+	if (price <= totalScore) { 
 
 		for (const item of parent.querySelectorAll('button')) {
 			item.classList.add('active')
@@ -89,10 +102,6 @@ for (const item of upgrade) {
 		let parent = event.target.parentElement // получаем родителя
 
 		upgradeCompany(parent, event)
-
-
-
-		
 		
 	})
 }
@@ -103,12 +112,17 @@ function upgradeCompany(parent, event) {
 	let price = parent.getAttribute('price') // получаем стоимость компании
 	let levelAtr = Number(parent.getAttribute('level')) // получаем уровень компании
 	let levelUp
+// debugger
+	let upgradePrice = upgradePriceFunc(levelAtr, price) // получаем стоимость улучшения компании
 	
-	console.log(price);
 
-		price == 0 ? price = 1000 : price
+	
 
-	if (upgradePrice(levelAtr, price) <= totalScore) {
+	if (upgradePrice <= totalScore) {
+
+		let upgradePriceNext = upgradePriceFunc(levelAtr + 1, price) // получаем стоимость улучшения компании на следуующем уровне компании
+
+		parent.querySelector('.upgrade').textContent = `Улучшить за: ${upgradePriceNext}` // получаем кнопку upgrade  и записываем в нее стоимость улучшения
 		
 		let level = parent.querySelector('.level') // получаем тэг level в родителе
 		let income = parent.querySelector('.income') // получаем тэг income в родителе
@@ -143,7 +157,7 @@ function upgradeCompany(parent, event) {
 
 		console.log(holding);
 
-		score.textContent = totalScore - upgradePrice(levelAtr, price)
+		score.textContent = totalScore - upgradePrice
 
 	} else {
 		alert('не достаточно денег на счете')
@@ -153,14 +167,16 @@ function upgradeCompany(parent, event) {
 		event.target.classList.remove('active')
 	}
 
-	console.log(upgradePrice(levelAtr, price));
+	console.log(upgradePrice);
 }
 
 
 
-function upgradePrice(levelAtr, price) { // расчитываем стоимость улучшения с учетом уровня компании
+function upgradePriceFunc(levelAtr, price) { // расчитываем стоимость улучшения с учетом уровня компании
 	console.log(levelAtr);
 	console.log(price);
+
+	price == 0 ? price = 1000 : price
 	// debugger
 	let priceUp
 	switch(Number(levelAtr)) {
