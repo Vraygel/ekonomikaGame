@@ -11,10 +11,14 @@
 }
 
 
-
 .wrap, .wrap__enterprises{
   display: flex;
 }
+
+/* .wrap__enterprises{
+  display: none;
+} */
+
 
 .enterprises_item{
   margin-left: 50px;
