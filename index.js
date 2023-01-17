@@ -26,6 +26,30 @@ for (const item of work) {
 for (const item of buy) {
 	item.addEventListener('click', (event) => {
 		let parent = event.target.parentElement // получаем родителя
+
+		bayCompany(parent, event)
+		
+	})
+
+}
+
+function autoWork(calc) {
+	timerId = setInterval(() => {
+		score.textContent = Number(score.textContent) + calc
+	}, 1000);
+}
+
+function bayCompany(parent, event) {
+	let totalScore = Number(score.textContent) // получаем количество денег на счете
+	let price = parent.getAttribute('price') // получаем стоимость компании
+
+	if (price <= totalScore) {
+
+		for (const item of parent.querySelectorAll('button')) {
+			item.classList.add('active')
+		}
+		event.target.classList.remove('active')
+
 		let bet =  Number(parent.getAttribute('bet')) // получаем начальную прибыль компании
 
 		let obj = { // записываем в переменную obj данные компании
@@ -37,7 +61,6 @@ for (const item of buy) {
 			id: parent.getAttribute('id'), // id компании
 		}
 
-
 		let profitAtr = Number(profit.getAttribute('profit')) // получаем значение атрибута profit (общий доход всех компаний с учетом уровня)
 
 		let totalProfit = profitAtr + bet // расчитываем новый общий доход
@@ -45,20 +68,18 @@ for (const item of buy) {
 		profit.textContent = totalProfit // показываем общий доход с учетом покупки новой компании
 
 		profit.setAttribute('profit',  totalProfit) // устанавливаем в атрубут profit новые данные после покупки новой компании
-
-
-		for (const item of parent.querySelectorAll('button')) {
-			item.classList.add('active')
-		}
-		event.target.classList.remove('active')
-
+		
 		holding.push(obj) // добавляем в массив holding купленную компанию
 		clearInterval(timerId) // сбрасываем ранее установленный интевал
 
 		autoWork(totalProfit) // запускаем новый интевал с учетом нового дохода всех компаний
-		console.log(holding);
-	})
 
+		score.textContent = totalScore - price
+
+		console.log(holding);
+	} else{
+		alert('не достаточно денег на счете')
+	}
 }
 
 
@@ -67,17 +88,37 @@ for (const item of upgrade) {
 	item.addEventListener('click', (event) =>{
 		let parent = event.target.parentElement // получаем родителя
 
+		upgradeCompany(parent, event)
+
+
+
+		
+		
+	})
+}
+
+
+function upgradeCompany(parent, event) {
+	let totalScore = Number(score.textContent) // получаем количество денег на счете
+	let price = parent.getAttribute('price') // получаем стоимость компании
+	let levelAtr = Number(parent.getAttribute('level')) // получаем уровень компании
+	let levelUp
+	
+	console.log(price);
+
+		price == 0 ? price = 1000 : price
+
+	if (upgradePrice(levelAtr, price) <= totalScore) {
+		
 		let level = parent.querySelector('.level') // получаем тэг level в родителе
 		let income = parent.querySelector('.income') // получаем тэг income в родителе
 
-		console.log(parent);
 		let profitAtr = Number(profit.getAttribute('profit')) // получаем значение атрибута profit (общий доход всех компаний с учетом уровня)
 		let bet =  Number(parent.getAttribute('bet')) // получаем начальную прибыль компании
-		let levelAtr = Number(parent.getAttribute('level')) // получаем уровень компании
-
+		
 		let betCalc = bet * levelAtr// расчитываем прибыль компании до абгрейда
 
-		let levelUp = levelAtr + 1 // увеличиваем уровень компании на 1
+		levelUp = levelAtr + 1 // увеличиваем уровень компании на 1
 
 		level.textContent = levelUp // показываем новый уровень компании
 
@@ -93,40 +134,56 @@ for (const item of upgrade) {
 		profit.setAttribute('profit', totalProfit) //  устанавливаем в атрибут profit новые данные после абгрейда компании
 	
 		parent.setAttribute('level', levelUp) // устанавливаем в атрибут level новый уровень компании
-		
-		
-
 
 		holding[parent.getAttribute('id')].level = levelUp; // записываем в объект компании новый уровень компании
 		
 		clearInterval(timerId) // сбрасываем ранее установленный интевал
 
-
 		autoWork(totalProfit)
 
 		console.log(holding);
-		
-	})
+
+		score.textContent = totalScore - upgradePrice(levelAtr, price)
+
+	} else {
+		alert('не достаточно денег на счете')
+	}
+
+	if (levelUp == 5) {
+		event.target.classList.remove('active')
+	}
+
+	console.log(upgradePrice(levelAtr, price));
 }
 
 
 
+function upgradePrice(levelAtr, price) { // расчитываем стоимость улучшения с учетом уровня компании
+	console.log(levelAtr);
+	console.log(price);
+	// debugger
+	let priceUp
+	switch(Number(levelAtr)) {
+		case 1:
+		priceUp = (price / 2)
+		  break;
+		  
+		  case 2:
+			priceUp = (price / 2) * 1.25
+		  break;
 
+		  case 3:
+			priceUp = (price / 2) * 1.5
+		  break;
 
+		  case 4:
+			priceUp = (price / 2) * 1.75
+		  break;
 
+	}
 
-
-function autoWork(calc) {
-	timerId = setInterval(() => {
-		score.textContent = Number(score.textContent) + calc
-	}, 1000);
+	return priceUp
 }
-
-
-
-
-
-
 
 
 
