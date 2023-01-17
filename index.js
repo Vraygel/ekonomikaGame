@@ -3,13 +3,24 @@ let buy = document.querySelectorAll('.buy')
 let upgrade = document.querySelectorAll('.upgrade')
 let score = document.querySelector('.score')
 let profit = document.querySelector('.profit')
+let clean = document.querySelector('.clean')
+
 
 
 let timerId
-let holding = []
+let holding = [] // создаем массив holding для записи купленных компаний
+
+let asset = { // создаем объект asset для записи активов компании (сумма на счету и доход всех компаний)
+	score: 0,
+	profit: 0
+} 
+holding.push(asset) //  добавляем в массив holding активы компании
 
 
+clean.addEventListener('click', () => {
 
+	localStorage.clear()
+})
 // console.log(holding);
 
 for (const item of work) {
@@ -17,14 +28,16 @@ for (const item of work) {
 		let parent = event.target.parentElement // получаем родителя
 		let calc = parent.getAttribute('level') * parent.getAttribute('bet')
 		score.textContent = Number(score.textContent) + calc
-		
+
+		holding[0].score = score.textContent; // записываем в массив holding новые данные счета
+
+		setLocalStorage(holding)
 	})
 
 }
 
 
 for (const item of buy) {
-
 
 	let parent = item.parentElement // получаем родителя
 
@@ -40,9 +53,13 @@ for (const item of buy) {
 
 }
 
-function autoWork(calc) {
+function autoWork(calc, holding) {
 	timerId = setInterval(() => {
 		score.textContent = Number(score.textContent) + calc
+
+		holding[0].score = score.textContent; // записываем в массив holding новые данные счета
+
+		setLocalStorage(holding)
 	}, 1000);
 }
 
@@ -54,7 +71,6 @@ function bayCompany(parent, event) {
 	let upgradePrice = upgradePriceFunc(levelAtr, price) // получаум стоимость улучшения компании
 
 	parent.querySelector('.upgrade').textContent = `Улучшить за: ${upgradePrice}` // получаем кнопку upgrade  и записываем в нее стоимость улучшения
-	
 
 	if (price <= totalScore) { 
 
@@ -82,30 +98,31 @@ function bayCompany(parent, event) {
 
 		profit.setAttribute('profit',  totalProfit) // устанавливаем в атрубут profit новые данные после покупки новой компании
 		
+		holding[0].profit = totalProfit; // записываем в массив holding новый общий доход компаний
+
 		holding.push(obj) // добавляем в массив holding купленную компанию
+
+		score.textContent = totalScore - price // списываем со счета стоимость покупки
+
+		holding[0].score = score.textContent; // записываем в массив holding новы данные счета
+
+		setLocalStorage(holding) // записывем в LocalStorage новые данные holdingа
+
 		clearInterval(timerId) // сбрасываем ранее установленный интевал
 
-		autoWork(totalProfit) // запускаем новый интевал с учетом нового дохода всех компаний
+		autoWork(totalProfit, holding) // запускаем новый интевал с учетом нового дохода и данных всех компаний	
 
-		score.textContent = totalScore - price
-
-		console.log(holding);
 	} else{
 		alert('не достаточно денег на счете')
 	}
 }
 
-
-
 for (const item of upgrade) {
 	item.addEventListener('click', (event) =>{
 		let parent = event.target.parentElement // получаем родителя
-
-		upgradeCompany(parent, event)
-		
+		upgradeCompany(parent, event) // запускаем функцию апгрейда компании
 	})
 }
-
 
 function upgradeCompany(parent, event) {
 	let totalScore = Number(score.textContent) // получаем количество денег на счете
@@ -114,9 +131,6 @@ function upgradeCompany(parent, event) {
 	let levelUp
 // debugger
 	let upgradePrice = upgradePriceFunc(levelAtr, price) // получаем стоимость улучшения компании
-	
-
-	
 
 	if (upgradePrice <= totalScore) {
 
@@ -144,20 +158,26 @@ function upgradeCompany(parent, event) {
 
 		profit.textContent = totalProfit // показываем новый общий доход
 
-
 		profit.setAttribute('profit', totalProfit) //  устанавливаем в атрибут profit новые данные после абгрейда компании
 	
 		parent.setAttribute('level', levelUp) // устанавливаем в атрибут level новый уровень компании
 
+		parent.setAttribute('income', calc) // устанавливаем в атрибут income новый доход компании
+
 		holding[parent.getAttribute('id')].level = levelUp; // записываем в объект компании новый уровень компании
+		holding[parent.getAttribute('id')].income = calc; // записываем в объект компании новый доход компании
+
+		holding[0].profit = totalProfit; // записываем в массив holding новый общий доход компаний
 		
-		clearInterval(timerId) // сбрасываем ранее установленный интевал
+		score.textContent = totalScore - upgradePrice // списываем со счета стоимость апгрейда
 
-		autoWork(totalProfit)
+		holding[0].score = score.textContent; // записываем в массив holding новые данные счета
 
-		console.log(holding);
+		clearInterval(timerId) // сбрасываем ранее установленный интервал
 
-		score.textContent = totalScore - upgradePrice
+		autoWork(totalProfit, holding) // запускаем новый интевал с учетом нового дохода и данных всех компаний
+
+		setLocalStorage(holding) // записывем в LocalStorage новые данные holdingа
 
 	} else {
 		alert('не достаточно денег на счете')
@@ -169,8 +189,6 @@ function upgradeCompany(parent, event) {
 
 	console.log(upgradePrice);
 }
-
-
 
 function upgradePriceFunc(levelAtr, price) { // расчитываем стоимость улучшения с учетом уровня компании
 	console.log(levelAtr);
@@ -195,86 +213,15 @@ function upgradePriceFunc(levelAtr, price) { // расчитываем стои�
 		  case 4:
 			priceUp = (price / 2) * 1.75
 		  break;
-
 	}
-
 	return priceUp
 }
 
+function setLocalStorage(holding) {
+	
+	let json = JSON.stringify(holding) // преобразуем массив holding в формат JSON
 
+	localStorage.setItem('user', json); // записываем в localStorage данные holdingа
 
-
-
-
-
-
-
-
-
-
-
-
-// for (const item of buy) {
-// 	item.addEventListener('click', (event) => {
-// 		let parent = event.target.parentElement // получаем родителя
-// 		let calc = Number(parent.getAttribute('bet'))
-// 		let profitAtr = Number(profit.getAttribute('profit'))
-
-// 		profit.textContent = Number(profit.textContent) + calc
-// 		profit.setAttribute('profit',  Number(profitAtr) + calc )
-// 		console.log(profit);
-
-// 		for (const item of parent.querySelectorAll('button')) {
-// 			item.classList.add('active')
-// 		}
-// 		event.target.classList.remove('active')
-
-// 		let obj = {
-// 			name: parent.getAttribute('name'),
-// 			level: parent.getAttribute('level'),
-// 			income: parent.getAttribute('income'),
-// 			bet: parent.getAttribute('bet'),
-// 			price: parent.getAttribute('price'),
-// 			id: parent.getAttribute('id'),
-// 		}
-
-// 		holding.push(obj)
-
-
-// 		clearInterval(timerId)
-// 		console.log(Number(profit.getAttribute('profit')));
-// 		autoWork(Number(profit.getAttribute('profit')))
-// 		console.log(holding);
-// 	})
-
-// }
-
-
-
-// for (const item of upgrade) {
-// 	item.addEventListener('click', (event) =>{
-// 		let parent = event.target.parentElement // получаем родителя
-// 		let levelAtr = parent.getAttribute('level')
-// 		console.log(levelAtr);
-// 		let calc = (Number(levelAtr) + 1) * parent.getAttribute('bet')
-		
-// 		let profitAtr = Number(profit.getAttribute('profit'))
-// 		console.log(profitAtr);
-
-// 		profit.textContent = calc
-// 		profit.setAttribute('profit', profitAtr + calc )
-// 		console.log(profit);
-
-// 		parent.setAttribute('level', Number(levelAtr) + 1)
-		
-// 		level.textContent = parent.getAttribute('level', Number(levelAtr) + 1)
-// 		holding[parent.getAttribute('id')].level = Number(levelAtr) + 1;
-		
-		
-// 		income.textContent = calc
-// 		clearInterval(timerId)
-// 		console.log(profitAtr);
-// 		autoWork(profitAtr)
-// 		console.log(holding);
-// 	})
-// }
+	console.log(JSON.parse(json));
+}
