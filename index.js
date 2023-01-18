@@ -136,13 +136,13 @@ clean.addEventListener('click', () => {
 	}
 
 	function autoWork(calc, holding) {
-		timerId = setInterval(() => {
-			score.textContent = Number(score.textContent) + calc
+		// timerId = setInterval(() => {
+		// 	score.textContent = Number(score.textContent) + calc
 
-			holding[0].score = score.textContent; // записываем в массив holding новые данные счета
+		// 	holding[0].score = score.textContent; // записываем в массив holding новые данные счета
 
-			setLocalStorage(holding)
-		}, 1000);
+		// 	setLocalStorage(holding)
+		// }, 1000);
 	}
 
 	function getLetFunc(parent) { // получаем данные компании
